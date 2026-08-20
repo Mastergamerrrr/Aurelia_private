@@ -1,0 +1,15 @@
+﻿namespace BANKAPPPROJECT
+{
+    public partial class Dashboard
+    {
+        protected global::System.Web.UI.WebControls.Label lblWelcome;
+        protected global::System.Web.UI.WebControls.Label lblHeroBal;
+        protected global::System.Web.UI.WebControls.Label lblHeroAcct;
+        protected global::System.Web.UI.WebControls.Label lblHeroDate;
+        protected global::System.Web.UI.WebControls.Label lblHeroSent;
+        protected global::System.Web.UI.WebControls.Label lblMoneyIn;
+        protected global::System.Web.UI.WebControls.Label lblMoneyOut;
+        protected global::System.Web.UI.WebControls.Panel pnlRecent;
+        protected global::System.Web.UI.WebControls.Repeater rptRecent;
+    }
+}

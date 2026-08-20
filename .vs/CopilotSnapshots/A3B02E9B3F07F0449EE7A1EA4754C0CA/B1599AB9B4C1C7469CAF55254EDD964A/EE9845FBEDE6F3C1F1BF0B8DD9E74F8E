@@ -1,0 +1,17 @@
+﻿namespace BANKAPPPROJECT
+{
+    public partial class Dashboard
+    {
+        protected global::System.Web.UI.WebControls.Panel pnlNotif;
+        protected global::System.Web.UI.WebControls.Repeater rptNotif;
+        protected global::System.Web.UI.WebControls.Label lblAcct;
+        protected global::System.Web.UI.WebControls.Label lblBal;
+        protected global::System.Web.UI.WebControls.Label lblSent;
+        protected global::System.Web.UI.WebControls.Label lblAcct2;
+        protected global::System.Web.UI.WebControls.Label lblName;
+        protected global::System.Web.UI.WebControls.Label lblDate;
+        protected global::System.Web.UI.WebControls.Label lblBal2;
+        protected global::System.Web.UI.WebControls.Label lblSent2;
+        protected global::System.Web.UI.WebControls.GridView gvTxn;
+    }
+}

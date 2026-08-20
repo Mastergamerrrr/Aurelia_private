@@ -1,0 +1,473 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="Dashboard.aspx.cs" Inherits="BANKAPPPROJECT.Dashboard" %>
+
+<asp:Content ID="c1" ContentPlaceHolderID="MainContent" runat="server">
+
+    <style>
+        .dashboard-header {
+            margin-bottom: 32px;
+        }
+
+        .dashboard-header h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 36px;
+            font-weight: 300;
+            color: var(--text);
+            margin-bottom: 8px;
+            letter-spacing: -0.015em;
+        }
+
+        .dashboard-header p {
+            color: var(--muted);
+            font-size: 14px;
+            letter-spacing: 0.02em;
+        }
+
+        /* Hero Card */
+        .hero-card {
+            background: var(--gradient-emerald);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-left h3 {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 12px;
+        }
+
+        .hero-balance {
+            font-family: 'Fraunces', serif;
+            font-size: 56px;
+            font-weight: 300;
+            color: var(--champagne);
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-balance-hide {
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--muted);
+            transition: color .2s ease;
+        }
+
+        .hero-balance-hide:hover {
+            color: var(--champagne);
+        }
+
+        .hero-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .hero-detail-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .hero-detail-label {
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .hero-detail-value {
+            color: var(--text);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .action-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s ease;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-btn:hover {
+            background: var(--surface-2);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-btn-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-emerald);
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            color: var(--text);
+        }
+
+        .action-btn-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .action-btn-desc {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stats-title {
+            grid-column: 1 / -1;
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 0;
+        }
+
+        .stat-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-item-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-sm);
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .stat-item-icon.in {
+            background: rgba(39,180,135,0.15);
+        }
+
+        .stat-item-icon.out {
+            background: rgba(229,107,122,0.15);
+        }
+
+        .stat-item-content {
+            flex: 1;
+        }
+
+        .stat-item-label {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+
+        .stat-item-value {
+            font-family: 'Fraunces', serif;
+            font-size: 24px;
+            font-weight: 300;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .stat-item-change {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .stat-item-change.positive {
+            color: var(--primary);
+            background: rgba(39,180,135,0.08);
+        }
+
+        .stat-item-change.negative {
+            color: #e56b7a;
+            background: rgba(229,107,122,0.08);
+        }
+
+        /* Recently Received */
+        .recently-received {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+        }
+
+        .recently-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .recently-title {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .recently-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .view-all-link {
+            color: var(--champagne);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color .2s ease;
+        }
+
+        .view-all-link:hover {
+            color: var(--champagne-soft);
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-emerald);
+            display: grid;
+            place-items: center;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-name {
+            font-weight: 500;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .transaction-amount {
+            font-family: 'Fraunces', serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--primary);
+            letter-spacing: -0.01em;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-card {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .action-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-card {
+                padding: 24px;
+            }
+
+            .hero-balance {
+                font-size: 40px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-details {
+                display: none;
+            }
+        }
+    </style>
+
+    <%-- Header --%>
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p>Welcome back, <asp:Label ID="lblWelcome" runat="server" />.</p>
+    </div>
+
+    <%-- Hero Card --%>
+    <div class="hero-card">
+        <div class="hero-left">
+            <h3>Total Current Balance</h3>
+            <div class="hero-balance">
+                <span><asp:Label ID="lblHeroBal" runat="server" /></span>
+                <span class="hero-balance-hide" title="Toggle visibility">👁️</span>
+            </div>
+            <div class="hero-details">
+                <div class="hero-detail-item">
+                    <span class="hero-detail-label">Account No.</span>
+                    <span class="hero-detail-value"><asp:Label ID="lblHeroAcct" runat="server" /></span>
+                </div>
+                <div class="hero-detail-item">
+                    <span class="hero-detail-label">Date Registered</span>
+                    <span class="hero-detail-value"><asp:Label ID="lblHeroDate" runat="server" /></span>
+                </div>
+                <div class="hero-detail-item">
+                    <span class="hero-detail-label">Total Sent</span>
+                    <span class="hero-detail-value"><asp:Label ID="lblHeroSent" runat="server" /></span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                <p style="color: var(--muted); font-size: 13px; margin-bottom: 20px;">Quick tip: Manage your finances efficiently with our secure platform.</p>
+            </div>
+        </div>
+    </div>
+
+    <%-- Action Buttons --%>
+    <div class="action-buttons">
+        <a href="Deposit.aspx" class="action-btn">
+            <div class="action-btn-icon">💳</div>
+            <div class="action-btn-label">Deposit</div>
+            <div class="action-btn-desc">Add funds</div>
+        </a>
+        <a href="Withdraw.aspx" class="action-btn">
+            <div class="action-btn-icon">💸</div>
+            <div class="action-btn-label">Withdraw</div>
+            <div class="action-btn-desc">Withdraw cash</div>
+        </a>
+        <a href="SendMoney.aspx" class="action-btn">
+            <div class="action-btn-icon">📤</div>
+            <div class="action-btn-label">Send Money</div>
+            <div class="action-btn-desc">Transfer funds</div>
+        </a>
+        <a href="StatementOfAccount.aspx" class="action-btn">
+            <div class="action-btn-icon">📋</div>
+            <div class="action-btn-label">View Reports</div>
+            <div class="action-btn-desc">Account reports</div>
+        </a>
+    </div>
+
+    <%-- Stats Section --%>
+    <div class="stats-section">
+        <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span class="stats-title">This Month</span>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon in">📈</div>
+            <div class="stat-item-content">
+                <div class="stat-item-label">Money In</div>
+                <div class="stat-item-value"><asp:Label ID="lblMoneyIn" runat="server" Text="PHP 0.00" /></div>
+            </div>
+            <div class="stat-item-change positive">+100%</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon out">📉</div>
+            <div class="stat-item-content">
+                <div class="stat-item-label">Money Out</div>
+                <div class="stat-item-value"><asp:Label ID="lblMoneyOut" runat="server" Text="PHP 0.00" /></div>
+            </div>
+            <div class="stat-item-change negative">-0%</div>
+        </div>
+    </div>
+
+    <%-- Recently Received --%>
+    <asp:Panel ID="pnlRecent" runat="server" Visible="false">
+        <div class="recently-received">
+            <div class="recently-header">
+                <div>
+                    <div class="recently-title">Recently Received</div>
+                    <div class="recently-subtitle">Money sent your way</div>
+                </div>
+                <a href="MySentReceived.aspx" class="view-all-link">View all →</a>
+            </div>
+            <asp:Repeater ID="rptRecent" runat="server">
+                <ItemTemplate>
+                    <div class="transaction-item">
+                        <div class="transaction-avatar"><%# GetInitials(Eval("SenderAcctNo").ToString()) %></div>
+                        <div class="transaction-info">
+                            <div class="transaction-name">Account <%# Eval("SenderAcctNo") %></div>
+                            <div class="transaction-date"><%# Eval("SendDate", "{0:MMMM dd, yyyy hh:mm tt}") %></div>
+                        </div>
+                        <div class="transaction-amount">+PHP <%# Eval("Amount", "{0:N2}") %></div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+    </asp:Panel>
+
+</asp:Content>

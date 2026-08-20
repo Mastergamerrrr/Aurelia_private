@@ -1,0 +1,108 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="Dashboard.aspx.cs" Inherits="BANKAPPPROJECT.Dashboard" %>
+
+<asp:Content ID="c1" ContentPlaceHolderID="MainContent" runat="server">
+
+    <%-- Notifications --%>
+    <asp:Panel ID="pnlNotif" runat="server" Visible="false">
+        <div class="card" style="margin-bottom:24px;">
+            <h3>🔔 Recent Received CloudMoney</h3>
+            <asp:Repeater ID="rptNotif" runat="server">
+                <ItemTemplate>
+                    <div class="notification">
+                        <span>💰</span>
+                        <span>Received <strong>PHP <%# Eval("Amount", "{0:N2}") %></strong>
+                        from Account No. <strong><%# Eval("SenderAcctNo") %></strong>
+                        on <%# Eval("SendDate", "{0:MMMM dd, yyyy hh:mm tt}") %></span>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+    </asp:Panel>
+
+    <%-- Stats Row --%>
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">Account No.</div>
+            <div class="stat-value"><asp:Label ID="lblAcct" runat="server" /></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Current Balance</div>
+            <div class="stat-value accent"><asp:Label ID="lblBal" runat="server" /></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Sent</div>
+            <div class="stat-value danger"><asp:Label ID="lblSent" runat="server" /></div>
+        </div>
+    </div>
+
+    <%-- Account Info --%>
+    <div class="card" style="margin-top:24px;">
+        <h2>Account Details</h2>
+        <table class="info-table">
+            <tr><th>Account No.</th><td><asp:Label ID="lblAcct2" runat="server" /></td></tr>
+            <tr><th>Full Name</th><td><asp:Label ID="lblName" runat="server" /></td></tr>
+            <tr><th>Date Registered</th><td><asp:Label ID="lblDate" runat="server" /></td></tr>
+            <tr><th>Current Balance</th><td><asp:Label ID="lblBal2" runat="server" /></td></tr>
+            <tr><th>Total Sent Amount</th><td><asp:Label ID="lblSent2" runat="server" /></td></tr>
+        </table>
+    </div>
+
+    <%-- Recent Transactions --%>
+    <div class="card" style="margin-top:24px;">
+        <h2>Recent Transactions</h2>
+        <asp:GridView ID="gvTxn" runat="server" AutoGenerateColumns="true"
+            CssClass="grid" GridLines="None" />
+    </div>
+
+    <style>
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-value.accent { color: var(--accent); }
+        .stat-value.danger { color: #e0345a; }
+
+        .info-table { margin-top: 0; }
+        .info-table th {
+            width: 180px;
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .grid { width: 100%; }
+
+        @media (max-width: 640px) {
+            .stats-row { grid-template-columns: 1fr; }
+        }
+    </style>
+
+</asp:Content>

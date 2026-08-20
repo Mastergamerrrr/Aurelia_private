@@ -1,0 +1,202 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="BANKAPPPROJECT.Login" %>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login — BankApp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+            --text: #0a2540;
+            --muted: #5b6b82;
+            --primary: #0a2540;
+            --primary-hover: #1a3a5c;
+            --accent: #00c2a8;
+            --border: #e6ebf2;
+            --danger: #e0345a;
+            --radius: 16px;
+            --shadow: 0 4px 24px rgba(10,37,64,0.10);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .login-wrap {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 28px;
+            color: var(--text);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-mark {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0a2540, #0a66ff);
+            display: grid; place-items: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .card .subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(10,37,64,0.08);
+            background: #fff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: background .15s, transform .15s, box-shadow .15s;
+            box-shadow: 0 2px 8px rgba(10,37,64,0.15);
+            letter-spacing: 0.01em;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(10,37,64,0.2);
+        }
+
+        .msg-error {
+            background: #fff0f3;
+            color: var(--danger);
+            border: 1px solid #fcc;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 14px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .footer-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .footer-link a:hover {
+            color: var(--primary-hover);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 24px 0 0;
+        }
+    </style>
+</head>
+<body>
+<form id="form1" runat="server">
+<div class="login-wrap">
+    <div class="brand">
+        <div class="brand-mark">B</div>
+        <span>BankApp</span>
+    </div>
+    <div class="card">
+        <h2>Welcome back</h2>
+        <p class="subtitle">Sign in to your account to continue.</p>
+
+        <label>Username</label>
+        <asp:TextBox ID="txtUsername" runat="server" />
+
+        <label>Password</label>
+        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" />
+
+        <asp:Button ID="btnLogin" runat="server" Text="Sign In" CssClass="btn" OnClick="btnLogin_Click" />
+        <asp:Label ID="lblMsg" runat="server" />
+
+        <hr class="divider" />
+        <div class="footer-link">
+            No account? <a href="Register.aspx">Register here</a>
+        </div>
+    </div>
+</div>
+</form>
+</body>
+</html>

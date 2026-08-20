@@ -1,0 +1,600 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="BANKAPPPROJECT.SiteMaster" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1a14" />
+    <title>Aurelia Private</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg:              #0c1713;
+            --surface:         #121e1a;
+            --surface-2:       #1a2722;
+            --surface-3:       #1f2e29;
+            --text:            #f1ead8;
+            --muted:           #8a9590;
+            --primary:         #27b487;
+            --primary-700:     #1c8a67;
+            --champagne:       #d4b06a;
+            --champagne-soft:  #e4c896;
+            --ink:             #07100d;
+            --border:          rgba(241,234,216,0.07);
+            --border-strong:   rgba(241,234,216,0.14);
+            --danger:          #e56b7a;
+            --radius:          16px;
+            --radius-sm:       10px;
+            --radius-xs:       6px;
+            --shadow-sm:       0 2px 8px rgba(0,0,0,0.35);
+            --shadow:          0 30px 60px -20px rgba(0,0,0,0.7), 0 8px 20px -8px rgba(0,0,0,0.5);
+            --shadow-glow:     0 0 50px -8px rgba(39,180,135,0.3);
+            --gradient-noir:   linear-gradient(135deg, #07100d 0%, #122019 100%);
+            --gradient-em:     linear-gradient(135deg, #0f2a22 0%, #1d4a3b 100%);
+            --gradient-gold:   linear-gradient(135deg, #e4c896 0%, #b08a3f 100%);
+            --sidebar-w:       240px;
+            --topbar-h:        64px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.55;
+            min-height: 100vh;
+            font-feature-settings: "ss01", "cv11";
+        }
+
+        body::before {
+            content: "";
+            position: fixed; inset: 0;
+            background-image: radial-gradient(rgba(241,234,216,0.04) 1px, transparent 1px);
+            background-size: 3px 3px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        a { color: var(--champagne); text-decoration: none; }
+
+        /* ─── APP SHELL ─── */
+        .app-shell { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar {
+            width: var(--sidebar-w);
+            min-height: 100vh;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+        }
+        .sidebar::-webkit-scrollbar { display: none; }
+
+        .sidebar-brand {
+            padding: 22px 20px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .brand-mark {
+            width: 36px; height: 36px;
+            border-radius: 999px;
+            background: var(--gradient-gold);
+            display: grid; place-items: center;
+            color: var(--ink);
+            font-family: 'Fraunces', serif;
+            font-weight: 500;
+            font-size: 17px;
+            flex-shrink: 0;
+            box-shadow: 0 3px 12px rgba(212,176,106,0.22);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            font-family: 'Fraunces', serif;
+            font-size: 17px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+        }
+        .brand-text small {
+            font-family: 'Inter', sans-serif;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--muted);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .sidebar-nav { flex: 1; padding: 8px 0; }
+
+        .nav-group {
+            padding: 18px 20px 6px;
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            opacity: 0.7;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            transition: color .15s ease, background .15s ease, border-color .15s ease;
+            border-left: 2px solid transparent;
+            position: relative;
+        }
+        .nav-link:hover {
+            color: var(--text);
+            background: rgba(39,180,135,0.05);
+            border-left-color: rgba(39,180,135,0.5);
+        }
+        .nav-link.active {
+            color: var(--text);
+            background: rgba(39,180,135,0.1);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+        .nav-link.active .nav-icon { color: var(--primary); }
+
+        .nav-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.7;
+        }
+        .nav-link.active .nav-icon,
+        .nav-link:hover .nav-icon { opacity: 1; }
+
+        .sidebar-foot {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+
+        /* ─── MAIN WRAP ─── */
+        .main-wrap {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ─── TOPBAR ─── */
+        .topbar {
+            height: var(--topbar-h);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(16px);
+            flex-shrink: 0;
+        }
+
+        .topbar-title {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            background: rgba(241,234,216,0.04);
+            border: 1px solid var(--border-strong);
+            border-radius: 999px;
+            font-size: 12px;
+            color: var(--text);
+            letter-spacing: 0.01em;
+        }
+
+        .user-avatar {
+            width: 28px; height: 28px;
+            border-radius: 999px;
+            background: var(--gradient-gold);
+            display: grid; place-items: center;
+            color: var(--ink);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn-exit {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: transparent;
+            color: var(--champagne) !important;
+            border: 1px solid var(--champagne);
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all .2s cubic-bezier(0.22,1,0.36,1);
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-exit:hover {
+            background: var(--champagne);
+            color: var(--ink) !important;
+            box-shadow: 0 4px 16px rgba(212,176,106,0.25);
+        }
+
+        /* ─── CONTENT ─── */
+        .site-main {
+            flex: 1;
+            padding: 32px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* ─── FOOTER ─── */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            padding: 20px 32px;
+            text-align: center;
+            font-size: 10px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* ─── SHARED FORM ELEMENTS ─── */
+        h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 30px;
+            font-weight: 300;
+            color: var(--text);
+            margin: 0 0 24px;
+            letter-spacing: -0.015em;
+            line-height: 1.1;
+        }
+
+        h3 {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            margin: 0 0 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 7px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+        }
+
+        input[type=text],
+        input[type=password],
+        input[type=email],
+        input[type=number],
+        input[type=date],
+        select {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+        input::placeholder { color: var(--muted); }
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(39,180,135,0.12);
+            background: var(--surface-2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 26px;
+            background: var(--gradient-em);
+            color: var(--text) !important;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-right: 10px;
+            transition: all .25s cubic-bezier(0.22,1,0.36,1);
+        }
+        .btn:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-1px);
+        }
+        .btn-green {
+            background: var(--gradient-gold);
+            color: var(--ink) !important;
+            border-color: transparent;
+        }
+        .btn-green:hover { box-shadow: 0 8px 24px rgba(212,176,106,0.3); }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .msg {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-top: 14px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid;
+        }
+        .msg-error { background: rgba(229,107,122,0.07); color: var(--danger); border-color: rgba(229,107,122,0.28); }
+        .msg-ok    { background: rgba(39,180,135,0.07); color: var(--primary); border-color: rgba(39,180,135,0.28); }
+
+        .balance {
+            font-family: 'Fraunces', serif;
+            font-size: 44px;
+            font-weight: 300;
+            color: var(--text);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+        .balance::after {
+            content: "";
+            display: block;
+            width: 36px; height: 1px;
+            background: var(--gradient-gold);
+            margin-top: 14px;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        table th {
+            background: transparent;
+            color: var(--muted);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-strong);
+            text-align: left;
+        }
+        table td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+        table td:first-child { font-family: 'Inter', sans-serif; }
+        table tr:last-child td { border-bottom: none; }
+        table tr:hover td { background: rgba(212,176,106,0.03); }
+
+        .notification {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            .sidebar { width: 200px; --sidebar-w: 200px; }
+            .main-wrap { margin-left: 200px; }
+        }
+        @media (max-width: 640px) {
+            .sidebar { display: none; }
+            .main-wrap { margin-left: 0; }
+            .topbar { padding: 0 18px; }
+            .site-main { padding: 20px 18px 32px; }
+            h2 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+<form id="form1" runat="server">
+
+<div class="app-shell">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-mark">A</span>
+            <span class="brand-text">
+                Aurelia
+                <small>Private Banking</small>
+            </span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-group">Banking</p>
+
+            <a href="Dashboard.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+                Dashboard
+            </a>
+
+            <a href="Deposit.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4l4 4 4-4"/>
+                </svg>
+                Deposit
+            </a>
+
+            <a href="Withdraw.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <circle cx="12" cy="12" r="9"/><path d="M12 16V8m-4 4 4-4 4 4"/>
+                </svg>
+                Withdraw
+            </a>
+
+            <a href="SendMoney.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+                Send CloudMoney
+            </a>
+
+            <p class="nav-group">Reports</p>
+
+            <a href="StatementOfAccount.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+                </svg>
+                Statement of Account
+            </a>
+
+            <a href="MyDepositsWithdrawals.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                </svg>
+                Deposits / Withdrawals
+            </a>
+
+            <a href="MySentReceived.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                    <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+                </svg>
+                Sent / Received
+            </a>
+
+            <p class="nav-group">Account</p>
+            <a href="ChangePassword.aspx" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Security
+            </a>
+        </nav>
+
+        <div class="sidebar-foot">
+            &copy; <%: DateTime.Now.Year %> Aurelia Private
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="main-wrap">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div id="topbarTitle" class="topbar-title"></div>
+            <div class="topbar-actions">
+                <asp:Label ID="lblUser" runat="server" CssClass="user-pill" />
+                <asp:LinkButton ID="lnkLogout" runat="server" CssClass="btn-exit" OnClick="lnkLogout_Click">
+                    Log out &nbsp;&#x2192;
+                </asp:LinkButton>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="site-main">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </main>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            &copy; <%: DateTime.Now.Year %> Aurelia Private &middot; Crafted with intention
+        </footer>
+
+    </div>
+</div>
+
+</form>
+
+<script>
+    (function () {
+        // Highlight active nav link
+        var links = document.querySelectorAll('.nav-link');
+        links.forEach(function (a) {
+            try {
+                var aPath = new URL(a.href).pathname.split('/').pop().toLowerCase();
+                var curPath = window.location.pathname.split('/').pop().toLowerCase();
+                if (aPath === curPath) a.classList.add('active');
+            } catch (e) {}
+        });
+
+        // Set topbar title from h2
+        var h2 = document.querySelector('.site-main h2');
+        var titleEl = document.getElementById('topbarTitle');
+        if (titleEl) {
+            titleEl.textContent = h2 ? h2.textContent.trim() : 'Aurelia Private';
+        }
+    })();
+</script>
+</body>
+</html>

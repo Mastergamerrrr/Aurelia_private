@@ -1,0 +1,100 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Web.Configuration;
+
+
+namespace BANKAPPPROJECT
+{
+    public partial class Dashboard : Page
+    {
+        string cs = WebConfigurationManager.ConnectionStrings["bankdb"].ConnectionString;
+
+        public string GetInitials(string accountNo)
+        {
+            return accountNo.Substring(0, Math.Min(2, accountNo.Length)).ToUpper();
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Session["AccountNo"] == null) { Response.Redirect("Login.aspx"); return; }
+            int acct = (int)Session["AccountNo"];
+
+            using (var db = new SqlConnection(cs))
+            {
+                db.Open();
+
+                // Load account info
+                string fullName = "", dateReg = "", bal = "", acctNo = "";
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT AccountNo, FullName, DateRegistered, Balance FROM Users WHERE AccountNo=@a";
+                    cmd.Parameters.AddWithValue("@a", acct);
+                    using (var r = cmd.ExecuteReader())
+                    {
+                        if (r.Read())
+                        {
+                            acctNo = r.GetInt32(0).ToString();
+                            fullName = r.GetString(1);
+                            dateReg = r.GetDateTime(2).ToString("MMMM dd, yyyy");
+                            bal = "PHP " + r.GetDecimal(3).ToString("N2");
+                        }
+                    }
+                }
+
+                // Set hero card
+                lblWelcome.Text = fullName.Split(' ')[0];
+                lblHeroBal.Text = bal;
+                lblHeroAcct.Text = acctNo;
+                lblHeroDate.Text = dateReg;
+
+                // Load total sent
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT ISNULL(SUM(Amount),0) FROM CloudMoney WHERE SenderAcctNo=@a";
+                    cmd.Parameters.AddWithValue("@a", acct);
+                    decimal totalSent = (decimal)cmd.ExecuteScalar();
+                    lblHeroSent.Text = "PHP " + totalSent.ToString("N2");
+                }
+
+                // Load money in (received) this month
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT ISNULL(SUM(Amount),0) FROM CloudMoney WHERE ReceiverAcctNo=@a AND MONTH(SendDate)=MONTH(GETDATE()) AND YEAR(SendDate)=YEAR(GETDATE())";
+                    cmd.Parameters.AddWithValue("@a", acct);
+                    decimal moneyIn = (decimal)cmd.ExecuteScalar();
+                    lblMoneyIn.Text = "PHP " + moneyIn.ToString("N2");
+                }
+
+                // Load money out (sent) this month
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT ISNULL(SUM(Amount),0) FROM CloudMoney WHERE SenderAcctNo=@a AND MONTH(SendDate)=MONTH(GETDATE()) AND YEAR(SendDate)=YEAR(GETDATE())";
+                    cmd.Parameters.AddWithValue("@a", acct);
+                    decimal moneyOut = (decimal)cmd.ExecuteScalar();
+                    lblMoneyOut.Text = "PHP " + moneyOut.ToString("N2");
+                }
+
+                // Load recently received transactions
+                using (var da = new SqlDataAdapter(
+                    "SELECT TOP 5 SenderAcctNo, Amount, SendDate FROM CloudMoney WHERE ReceiverAcctNo=@a ORDER BY SendID DESC", db))
+                {
+                    da.SelectCommand.Parameters.AddWithValue("@a", acct);
+                    var dt = new DataTable();
+                    da.Fill(dt);
+                    if (dt.Rows.Count > 0)
+                    {
+                        pnlRecent.Visible = true;
+                        rptRecent.DataSource = dt;
+                        rptRecent.DataBind();
+                    }
+                }
+            }
+        }
+    }
+}
